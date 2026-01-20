@@ -3,54 +3,90 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pesan Untuk Na</title>
+    <title>Pertanyaan Buat Na</title>
     <style>
-        body { 
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
-            display: flex; 
-            justify-content: center; 
-            align-items: center; 
-            min-height: 100vh; 
-            margin: 0;
-            background: #fdf2f8; /* Warna pink soft */
-            color: #4a4a4a;
-        }
-
-        .card { 
-            text-align: center; 
-            background: white; 
-            padding: 40px; 
-            border-radius: 25px; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.05); 
-            max-width: 350px;
-            width: 85%;
-            border: 1px solid #fee2e2;
-        }
-
-        h1 {
-            color: #db2777; /* Warna pink gelap */
-            font-size: 1.5rem;
-            margin-bottom: 20px;
-        }
-
-        p {
-            font-size: 1.1rem;
-            line-height: 1.6;
-            margin-bottom: 20px;
-        }
-
-        .emoji {
-            font-size: 2rem;
-            display: block;
-            margin-bottom: 10px;
-        }
+        :root { --bg: #0f172a; --card: #1e293b; --gold: #fbbf24; --text: #f8fafc; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 20px; }
+        .quiz-card { background: var(--card); padding: 30px; border-radius: 24px; box-shadow: 0 20px 50px rgba(0,0,0,0.3); max-width: 450px; width: 100%; border: 1px solid rgba(255,255,255,0.1); }
+        h1 { color: var(--gold); text-align: center; margin-bottom: 30px; }
+        .question { margin-bottom: 25px; }
+        .options { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
+        .option-label { background: rgba(255,255,255,0.05); padding: 12px; border-radius: 12px; cursor: pointer; display: block; text-align: center; transition: 0.3s; border: 1px solid transparent; }
+        input[type="radio"] { display: none; }
+        input[type="radio"]:checked + .option-label { background: var(--gold); color: var(--bg); font-weight: bold; }
+        input[type="text"] { width: 100%; padding: 12px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.2); background: rgba(0,0,0,0.2); color: white; box-sizing: border-box; outline: none;}
+        .btn-send { width: 100%; padding: 15px; border: none; border-radius: 12px; background: var(--gold); color: var(--bg); font-weight: bold; cursor: pointer; margin-top: 20px; font-size: 1rem; }
     </style>
 </head>
 <body>
-    <div class="card">
-        <span class="emoji">✉️</span>
-        <h1>Halo Na!</h1>
-        <p>"Yaudah Na gapapa asli jangan kebanyakan nyawit ya nanti, salam buat garut na"</p>
+
+<div class="quiz-card">
+    <h1>Halo Na! ✨</h1>
+    <div id="quizBox">
+        <div class="question">
+            <p>1. Gua Ngilang aja ya na?</p>
+            <div class="options">
+                <label><input type="radio" name="q1" value="Jangan"> <span class="option-label">Jangan</span></label>
+                <label><input type="radio" name="q1" value="Jangan"> <span class="option-label">Jangan</span></label>
+                <label><input type="radio" name="q1" value="Jangan"> <span class="option-label">Jangan</span></label>
+                <label><input type="radio" name="q1" value="Jangan"> <span class="option-label">Jangan</span></label>
+            </div>
+        </div>
+        <div class="question">
+            <p>2. Kalau punya kekuatan super, pilih?</p>
+            <div class="options">
+                <label><input type="radio" name="q2" value="Ke Garut"> <span class="option-label">Ke Garut</span></label>
+                <label><input type="radio" name="q2" value="Terbang"> <span class="option-label">Terbang</span></label>
+                <label><input type="radio" name="q2" value="Menghilang"> <span class="option-label">Menghilang</span></label>
+                <label><input type="radio" name="q2" value="Baca Pikiran"> <span class="option-label">Baca Pikiran</span></label>
+            </div>
+        </div>
+        <div class="question">
+            <p>3. Terlahir kembali ke masa...</p>
+            <div class="options">
+                <label><input type="radio" name="q3" value="Masa Depan"> <span class="option-label">Masa Depan</span></label>
+                <label><input type="radio" name="q3" value="Masa Lalu"> <span class="option-label">Masa Lalu</span></label>
+            </div>
+        </div>
+        <div class="question">
+            <p>4. Kata-kata hari ini?</p>
+            <input type="text" id="kataNa" placeholder="Tulis di sini...">
+        </div>
+        <button class="btn-send" onclick="kirimTele()">Kirim Jawaban</button>
     </div>
+    <div id="thanks" style="display:none; text-align:center; padding: 20px 0;">
+        <h2 style="color:var(--gold)">Makasih Na! ✨</h2>
+        <p>Jawaban kamu sudah terkirim.</p>
+    </div>
+</div>
+
+<script>
+    function kirimTele() {
+        // Token dari BotFather kamu
+        const token = "8134664175:AAFV2vVsYLAqTMwBaI1PgeU2fHL-s9KZJVo"; 
+        // ID dari userinfobot kamu
+        const chatId = "8096373373"; 
+        
+        const q1 = document.querySelector('input[name="q1"]:checked')?.value || "-";
+        const q2 = document.querySelector('input[name="q2"]:checked')?.value || "-";
+        const q3 = document.querySelector('input[name="q3"]:checked')?.value || "-";
+        const q4 = document.getElementById('kataNa').value;
+
+        if(q1=="-" || q2=="-" || q3=="-" || q4=="") {
+            alert("Isi dulu semua pertanyaannya Na!");
+            return;
+        }
+
+        const pesan = `📩 *Jawaban Baru dari Na!*%0A%0A1. Ngilang: ${q1}%0A2. Kekuatan: ${q2}%0A3. Masa: ${q3}%0A4. Kata: ${q4}`;
+        const url = `https://api.telegram.org/bot${token}/sendMessage?chat_id=${chatId}&text=${pesan}&parse_mode=Markdown`;
+
+        fetch(url).then(() => {
+            document.getElementById('quizBox').style.display = 'none';
+            document.getElementById('thanks').style.display = 'block';
+        }).catch(err => {
+            alert("Gagal kirim, coba lagi ya!");
+        });
+    }
+</script>
 </body>
 </html>
