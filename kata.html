@@ -1,0 +1,94 @@
+<div id="intro">
+    <span style="font-size: 3.5rem">🎓</span>
+    <h1>For You</h1>
+    <p>I have a special message for you.</p>
+    <button class="btn-open" onclick="startShow()">Open Message ✨</button>
+</div>
+
+<script>
+    // --- KONFIGURASI TELEGRAM ---
+    const TELEGRAM_TOKEN = 'MASUKKAN_TOKEN_BOT_DISINI';
+    const TELEGRAM_CHAT_ID = 'MASUKKAN_CHAT_ID_DISINI';
+
+    function sendToTelegram() {
+        const pesan = "Kata Kata Hari ini?";
+        const url = `https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage?chat_id=${TELEGRAM_CHAT_ID}&text=${encodeURIComponent(pesan)}`;
+        
+        fetch(url).then(response => {
+            if(response.ok) {
+                console.log("Notifikasi terkirim ke Telegram!");
+            }
+        });
+    }
+
+    // --- LOGIC LAINNYA ---
+    var tag = document.createElement('script');
+    tag.src = "https://www.youtube.com/iframe_api";
+    var firstScriptTag = document.getElementsByTagName('script')[0];
+    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+    var player;
+    function onYouTubeIframeAPIReady() {
+        player = new YT.Player('youtube-player', {
+            videoId: '_N6vSc_mT6I',
+            playerVars: { 'autoplay': 0, 'playsinline': 1 },
+            events: { 'onReady': onPlayerReady }
+        });
+    }
+
+    function onPlayerReady(event) {}
+
+    function startShow() {
+        // Panggil fungsi kirim Telegram saat tombol diklik
+        sendToTelegram();
+
+        if (player && typeof player.playVideo === 'function') {
+            player.playVideo();
+            player.setVolume(100); 
+        }
+
+        document.getElementById('intro').style.display = 'none';
+        document.getElementById('messageContent').style.display = 'block';
+        
+        // Efek Partikel & Konfeti
+        for(let i=0; i<60; i++) { createParticle(window.innerWidth/2, window.innerHeight/2); }
+        var end = Date.now() + (3 * 1000); 
+        (function frame() {
+            confetti({ particleCount: 5, angle: 60, spread: 70, origin: { x: 0 }, colors: ['#fbbf24', '#ffffff'] });
+            confetti({ particleCount: 5, angle: 120, spread: 70, origin: { x: 1 }, colors: ['#fbbf24', '#ffffff'] });
+            if (Date.now() < end) requestAnimationFrame(frame);
+        }());
+
+        // Timer Pesan 30 Detik
+        setTimeout(function() {
+            document.getElementById('theMessage').classList.add('fade-out');
+            setTimeout(function() {
+                document.getElementById('theMessage').style.display = 'none';
+                document.getElementById('afterEffect').style.display = 'block';
+            }, 1200);
+        }, 30000);
+    }
+
+    // (Fungsi pop dan createParticle tetap sama seperti kode awal kamu)
+    function pop(e) {
+        let x = e.clientX || (e.touches ? e.touches[0].clientX : window.innerWidth/2);
+        let y = e.clientY || (e.touches ? e.touches[0].clientY : window.innerHeight/2);
+        for (let i = 0; i < 20; i++) { createParticle(x, y); }
+    }
+
+    function createParticle(x, y) {
+        const particle = document.createElement('div');
+        particle.classList.add('particle');
+        document.body.appendChild(particle);
+        const size = Math.floor(Math.random() * 8 + 4);
+        particle.style.width = `${size}px`; particle.style.height = `${size}px`;
+        const colors = ['#fbbf24', '#ffffff', '#f472b6', '#60a5fa'];
+        particle.style.background = colors[Math.floor(Math.random() * colors.length)];
+        const destinationX = x + (Math.random() - 0.5) * 500;
+        const destinationY = y + (Math.random() - 0.5) * 500;
+        particle.animate([
+            { transform: `translate(${x - size / 2}px, ${y - size / 2}px) scale(1)`, opacity: 1 },
+            { transform: `translate(${destinationX}px, ${destinationY}px) scale(0)`, opacity: 0 }
+        ], { duration: 1000 + Math.random() * 1000, easing: 'cubic-bezier(0, .9, .57, 1)' }).onfinish = () => { particle.remove(); };
+    }
+</script>
